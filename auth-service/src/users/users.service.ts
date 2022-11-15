@@ -17,4 +17,12 @@ export class UsersService {
   async create(name: string, password: string, roleId: number): Promise<User> {
     return this.userModel.create({ name, password, roleId });
   }
+
+  async delete(id: number) {
+    return this.userModel.destroy({ where: { id } });
+  }
+
+  async update(id: number, name: string, password: string, roleId: number) {
+    return this.userModel.update({ name, password, roleId }, { where: { id } });
+  }
 }

@@ -17,4 +17,12 @@ export class RolesService {
   async create(name: string) {
     return this.roleModel.create({ name });
   }
+
+  async delete(id: number) {
+    return this.roleModel.destroy({ where: { id } });
+  }
+
+  async update(id: number, name: string) {
+    return this.roleModel.update({ name }, { where: { id } });
+  }
 }
