@@ -69,7 +69,7 @@ export class SchemaRegistry {
       throw new Error(`Schema ${name} - ${version} not found`);
     }
     const schema = JSON.parse(stringSchema) as JSONSchemaType<T>;
-    const validate = await this.ajv.compileAsync(schema);
+    const validate = this.ajv.compile(schema);
 
     if (validate(object)) return JSON.stringify(object);
     else throw new Error(`Invalid payload: ${validate.errors}`);
@@ -85,7 +85,7 @@ export class SchemaRegistry {
       throw new Error(`Schema ${name} - ${version} not found`);
     }
     const schema = JSON.parse(stringSchema) as JSONSchemaType<T>;
-    const validate = await this.ajv.compileAsync(schema);
+    const validate = this.ajv.compile(schema);
 
     const json = JSON.parse(payload);
     if (validate(json)) return json as T;

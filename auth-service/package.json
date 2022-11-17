@@ -34,7 +34,7 @@
     "rxjs": "^7.2.0",
     "sequelize": "^6.25.5",
     "sequelize-typescript": "^2.1.5",
-    "@skwinnik/schema-registry-client": "^0.0.10"
+    "@skwinnik/schema-registry-client": "^0.0.12"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

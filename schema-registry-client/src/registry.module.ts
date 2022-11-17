@@ -6,6 +6,7 @@ import { SchemaRegistry } from './registry.class';
 export class SchemaRegistryModule {
   static forRoot(schemaRegistryUrl: string): DynamicModule {
     return {
+      global: true,
       module: SchemaRegistryModule,
       imports: [HttpModule],
       providers: [
