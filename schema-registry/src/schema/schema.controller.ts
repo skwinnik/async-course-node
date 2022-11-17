@@ -42,7 +42,10 @@ export class SchemaController {
     @Param('name') name: string,
     @Param('version') version: number,
   ) {
-    return new SchemaDto(await this.schemaService.findOne(name, +version));
+    const schema = await this.schemaService.findOne(name, +version);
+    if (!schema) return null;
+    
+    return new SchemaDto(schema);
   }
 
   @Delete(':name/:version')
