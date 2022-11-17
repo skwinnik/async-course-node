@@ -1,9 +1,9 @@
 {
-  "name": "schema-registry-client",
+  "name": "@skwinnik/schema-registry-client",
   "version": "0.0.1",
   "description": "",
-  "author": "",
-  "private": true,
+  "author": "Pavel Skrinnik <screen0994@gmail.com>",
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "start:dev": "tsc -w",

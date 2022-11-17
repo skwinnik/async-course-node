@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ scope: Scope.DEFAULT })
-export default class SchemaRegistryClient {
+export class SchemaRegistryClient {
   private schemaCache: { [key: string]: string } = {};
 
   constructor(
@@ -29,7 +29,7 @@ export default class SchemaRegistryClient {
 
     const schema = response.data.json as string;
     this.schemaCache[`${name}-${version}`] = schema;
-    
+
     return schema;
   }
 

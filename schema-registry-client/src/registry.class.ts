@@ -1,7 +1,7 @@
-import SchemaRegistryClient from './client';
+import { SchemaRegistryClient } from './registry.api';
 import Ajv, {JSONSchemaType} from 'ajv';
 
-export default class SchemaRegistry {
+export class SchemaRegistry {
   private ajv: Ajv;
   constructor(private schemaRegistryClient: SchemaRegistryClient) {
     this.ajv = new Ajv();

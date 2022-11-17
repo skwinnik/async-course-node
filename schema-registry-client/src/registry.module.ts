@@ -1,20 +1,21 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import SchemaRegistryValidator from './registry';
-import SchemaRegistryClient from './client';
+import { SchemaRegistry } from './registry.class';
+import { SchemaRegistryClient } from './registry.api';
 
-@Module({})
-export default class SchemaRegistryModule {
-  static register(schemaRegistryUrl: string): DynamicModule {
+@Module({
+})
+export class SchemaRegistryModule {
+  static forRoot(schemaRegistryUrl: string): DynamicModule {
     return {
       module: SchemaRegistryModule,
       imports: [HttpModule],
       providers: [
         { provide: 'SCHEMA_REGISTRY_URL', useValue: schemaRegistryUrl },
-        SchemaRegistryValidator,
+        SchemaRegistry,
         SchemaRegistryClient,
       ],
-      exports: [SchemaRegistryValidator],
+      exports: [SchemaRegistry],
     };
   }
 }
