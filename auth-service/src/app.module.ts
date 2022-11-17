@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { SchemaRegistryModule } from '@skwinnik/schema-registry-client';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './db/models/user';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { RolesModule } from './roles/roles.module';
-import { Role } from './db/models/role';
 
 @Module({
   imports: [
@@ -16,7 +15,7 @@ import { Role } from './db/models/role';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-
+      
       useFactory: (configService: ConfigService) => ({
         dialect: 'postgres',
         host: configService.get('DATABASE_HOST'),
@@ -35,6 +34,7 @@ import { Role } from './db/models/role';
     }),
     UsersModule,
     RolesModule,
+    SchemaRegistryModule.forRoot('http://schema-registry')
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

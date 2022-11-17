@@ -1,6 +1,6 @@
 {
   "name": "@skwinnik/schema-registry-client",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "",
   "author": "Pavel Skrinnik <screen0994@gmail.com>",
   "private": false,
