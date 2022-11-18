@@ -36,7 +36,6 @@ export class UsersController {
     return await this.usersService.update(
       user.id,
       user.name,
-      user.password,
       user.roleId,
     );
   }
