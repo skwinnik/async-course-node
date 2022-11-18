@@ -8,6 +8,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { RolesModule } from './roles/roles.module';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      
+
       useFactory: (configService: ConfigService) => ({
         dialect: 'postgres',
         host: configService.get('DATABASE_HOST'),
@@ -27,14 +28,15 @@ import { RolesModule } from './roles/roles.module';
         sync: {
           force: false,
           alter: true,
-          logging: true
+          logging: true,
         },
         synchronize: true,
       }),
     }),
     UsersModule,
     RolesModule,
-    SchemaRegistryModule.forRoot('http://schema-registry')
+    SchemaRegistryModule.forRoot('http://schema-registry'),
+    AuthModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

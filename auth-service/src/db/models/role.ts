@@ -4,7 +4,6 @@ import { Column, Model, Table } from 'sequelize-typescript';
   paranoid: true,
   createdAt: true,
   deletedAt: true,
-  
 })
 export class Role extends Model {
   @Column({
@@ -14,6 +13,6 @@ export class Role extends Model {
   })
   id: number;
 
-  @Column
+  @Column({ unique: true })
   name: string;
 }

@@ -8,6 +8,8 @@ import { UserCreatedV1Event } from './events/userCreated.v1.event';
 import { UserDeletedV1Event } from './events/userDeleted.v1.event';
 import { UserUpdatedV1Event } from './events/userUpdated.v1.event';
 
+import * as bcrypt from 'bcryptjs';
+
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
@@ -26,6 +28,10 @@ export class UsersService {
     return this.userModel.findOne({ where: { id } });
   }
 
+  async findOneByName(name: string): Promise<User | null> {
+    return this.userModel.findOne({ where: { name } });
+  }
+
   async create(
     name: string,
     password: string,
@@ -36,7 +42,11 @@ export class UsersService {
         const transactionHost = { transaction: t };
 
         const user = await this.userModel.create(
-          { name, password, roleId },
+          {
+            name,
+            passwordHash: await bcrypt.hash(password, await bcrypt.genSalt(10)),
+            roleId,
+          },
           transactionHost,
         );
         const event = new UserCreatedV1Event(user.id, user.roleId, user.name);
@@ -99,13 +109,12 @@ export class UsersService {
   async update(
     id: number,
     name: string,
-    password: string,
     roleId: number,
   ): Promise<number | null> {
     try {
       return await this.sequelize.transaction(async (t) => {
         const updated = await this.userModel.update(
-          { name, password, roleId },
+          { name, roleId },
           { where: { id }, transaction: t },
         );
 

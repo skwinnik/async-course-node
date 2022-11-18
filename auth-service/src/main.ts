@@ -36,6 +36,12 @@ async function bootstrap() {
     .setTitle('Auth Service')
     .setDescription('The Auth Service API description')
     .setVersion('1.0')
+    .addSecurity('ApiKeyAuth', {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
+    .addSecurityRequirements('ApiKeyAuth')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

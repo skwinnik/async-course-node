@@ -12,9 +12,11 @@ export class User extends Model {
   @Column
   roleId: number;
 
-  @Column
+  @Column({
+    unique: true,
+  })
   name: string;
 
   @Column
-  password: string;
+  passwordHash: string;
 }
