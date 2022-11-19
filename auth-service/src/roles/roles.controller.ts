@@ -1,11 +1,13 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { HasRoles } from 'src/auth/decorators/roles.decorator';
 import { CreateRole } from './requests/createRole';
 import { UpdateRole } from './requests/updateRole';
 import { RolesService } from './roles.service';
 
 @Controller('roles')
 @ApiTags('Roles')
+@HasRoles('admin')
 export class RolesController {
   constructor(private roleService: RolesService) {}
 
