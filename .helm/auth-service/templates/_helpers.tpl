@@ -42,11 +42,25 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "auth-service-publisher.labels" -}}
+helm.sh/chart: {{ include "auth-service.chart" . }}
+{{ include "auth-service-publisher.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
 {{- define "auth-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "auth-service.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "auth-service-publisher.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "auth-service.name" . }}-publisher
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
