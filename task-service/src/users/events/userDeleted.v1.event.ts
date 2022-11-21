@@ -9,10 +9,3 @@ export class UserDeletedV1Event {
   ) {}
 }
 
-export const UserDeletedV1EventSchema: JSONSchemaType<UserDeletedV1Event> = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-  },
-  required: ['id'],
-};

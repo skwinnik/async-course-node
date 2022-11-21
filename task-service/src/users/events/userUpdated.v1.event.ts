@@ -10,13 +10,3 @@ export class UserUpdatedV1Event {
     public readonly name: string,
   ) {}
 }
-
-export const UserUpdatedV1EventSchema: JSONSchemaType<UserUpdatedV1Event> = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-    roleId: { type: 'number' },
-    name: { type: 'string' },
-  },
-  required: ['id', 'roleId', 'name'],
-};
