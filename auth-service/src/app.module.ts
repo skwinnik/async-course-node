@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
+import { PublisherModule } from './publisher/publisher.module';
 
 @Module({
   imports: [
@@ -31,12 +32,14 @@ import { AuthModule } from './auth/auth.module';
           logging: true,
         },
         synchronize: true,
+        logging: false,
       }),
     }),
     UsersModule,
     RolesModule,
     SchemaRegistryModule.forRoot('http://schema-registry'),
     AuthModule,
+    PublisherModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
