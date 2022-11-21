@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-import { SchemaRegistryModule } from '@skwinnik/schema-registry-client';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
-import { RolesModule } from './roles/roles.module';
-import { AuthModule } from './auth/auth.module';
+import { PublisherModule } from './publisher/publisher.module';
+
 @Module({
   imports: [
+    PublisherModule,
     ConfigModule.forRoot(),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
@@ -26,19 +22,14 @@ import { AuthModule } from './auth/auth.module';
         autoLoadModels: true,
         sync: {
           force: false,
-          alter: true,
-          logging: true,
+          alter: false,
+          logging: false,
         },
-        synchronize: true,
+        synchronize: false,
         logging: false,
       }),
     }),
-    UsersModule,
-    RolesModule,
-    SchemaRegistryModule.forRoot('http://schema-registry'),
-    AuthModule
   ],
-  controllers: [AppController, HealthController],
-  providers: [AppService],
+  controllers: [HealthController],
 })
 export class AppModule {}
