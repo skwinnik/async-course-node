@@ -26,7 +26,7 @@ export class PublisherService implements OnApplicationShutdown {
         const count = await this.outbox.count({
           where: { sentAt: null },
         });
-        
+
         if (count <= 0) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           continue;
@@ -57,11 +57,15 @@ export class PublisherService implements OnApplicationShutdown {
   }
 
   async publishMessage(message: Outbox) {
-    const topic = `v${message.eventVersion}.${message.eventName}`;
+    const topic = `${message.eventName}.v${message.eventVersion}`;
     console.log('Publishing message: ', message.payload, ' to topic: ', topic);
 
     const result = await firstValueFrom(
-      this.client.emit(topic, message.payload),
+      this.client.emit(topic, {
+        event_name: message.eventName,
+        event_version: message.eventVersion,
+        payload: message.payload,
+      }),
     );
     console.log('Publishing result: ', result);
   }

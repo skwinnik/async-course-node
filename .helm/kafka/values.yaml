@@ -1,3 +1,6 @@
+deleteTopicEnable: true
+autoCreateTopicsEnable: true
+
 persistence:
   enabled: true
   storageClass: nfs-client
