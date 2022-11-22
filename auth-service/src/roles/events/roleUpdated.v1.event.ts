@@ -1,7 +1,7 @@
 import { JSONSchemaType } from 'ajv';
 
 export class RoleUpdatedV1Event {
-  public static EVENT_NAME = 'roleUpdated';
+  public static EVENT_NAME = 'role.updated';
   public static VERSION = 1;
 
   constructor(

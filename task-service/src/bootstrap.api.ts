@@ -47,8 +47,7 @@ function configureMicroservice(app: INestApplication) {
           groupId: 'task-service',
         },
         subscribe: {
-          //TODO change naming schema to user.created.v1
-          topics: ['v1.userCreated'],
+          topics: [new RegExp('user\..*')],
           fromBeginning: true,
         },
         autoCommit: true,

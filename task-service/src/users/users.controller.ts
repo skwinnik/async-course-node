@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
-  @EventPattern('v1.userCreated')
+  @EventPattern('user.created.v1')
   async createV1(
     @Body(ValidationSchemaPipe<UserCreatedV1Event>) event: UserCreatedV1Event,
   ) {
