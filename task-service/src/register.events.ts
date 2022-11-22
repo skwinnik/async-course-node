@@ -11,6 +11,10 @@ import {
   TaskCreatedV1Event,
   TaskCreatedV1EventSchema,
 } from './tasks/events/taskCreated.v1.event';
+import {
+  TaskUpdatedV1Event,
+  TaskUpdatedV1EventSchema,
+} from './tasks/events/taskUpdated.v1.event';
 
 export async function registerEvents(schemaRegistry: SchemaRegistry) {
   const promises = [
@@ -28,6 +32,11 @@ export async function registerEvents(schemaRegistry: SchemaRegistry) {
       TaskCompletedV1Event.EVENT_NAME,
       TaskCompletedV1Event.VERSION,
       TaskCompletedV1EventSchema,
+    ),
+    schemaRegistry.register(
+      TaskUpdatedV1Event.EVENT_NAME,
+      TaskUpdatedV1Event.VERSION,
+      TaskUpdatedV1EventSchema,
     ),
   ];
 

@@ -1,7 +1,7 @@
 import { JSONSchemaType } from 'ajv';
 
-export class TaskCreatedV1Event {
-  public static EVENT_NAME = 'task.created';
+export class TaskUpdatedV1Event {
+  public static EVENT_NAME = 'task.updated';
   public static VERSION = 1;
 
   constructor(
@@ -12,7 +12,7 @@ export class TaskCreatedV1Event {
   ) {}
 }
 
-export const TaskCreatedV1EventSchema: JSONSchemaType<TaskCreatedV1Event> = {
+export const TaskUpdatedV1EventSchema: JSONSchemaType<TaskUpdatedV1Event> = {
   type: 'object',
   properties: {
     id: { type: 'number' },
