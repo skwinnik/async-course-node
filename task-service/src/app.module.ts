@@ -8,6 +8,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './tasks/tasks.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -34,7 +35,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     SchemaRegistryModule.forRoot('http://schema-registry'),
-    AuthModule
+    AuthModule,
+    TasksModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

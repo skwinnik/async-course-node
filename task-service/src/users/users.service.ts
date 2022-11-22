@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
-import { User } from 'src/db/models/user';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +12,8 @@ export class UsersService {
     @InjectModel(User) private userModel: typeof User,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.findAll();
+  async findAll(options: FindOptions<User>): Promise<User[]> {
+    return this.userModel.findAll(options);
   }
 
   async findOne(id: number): Promise<User | null> {
@@ -32,7 +33,7 @@ export class UsersService {
           {
             id,
             name,
-            roleName: roleId,
+            roleId,
           },
           transactionHost,
         );

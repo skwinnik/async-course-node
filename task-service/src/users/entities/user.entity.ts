@@ -15,5 +15,5 @@ export class User extends Model {
   name: string;
 
   @Column
-  roleName: string;
+  roleId: string;
 }
