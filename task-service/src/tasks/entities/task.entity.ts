@@ -1,5 +1,8 @@
-import { Column, Model, Table } from 'sequelize-typescript';
-
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
+export enum TaskStatus {
+  ASSIGNED = 'ASSIGNED',
+  COMPLETED = 'COMPLETED',
+}
 @Table
 export class Task extends Model {
   @Column({
@@ -14,4 +17,10 @@ export class Task extends Model {
 
   @Column
   userId: number;
+
+  @Column({
+    type: DataType.STRING,
+    defaultValue: TaskStatus.ASSIGNED,
+  })
+  taskStatus: TaskStatus;
 }

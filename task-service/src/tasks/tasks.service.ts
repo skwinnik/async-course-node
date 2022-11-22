@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { RolesService } from 'src/roles/roles.service';
 import { UsersService } from 'src/users/users.service';
+import { CompleteTaskDto } from './dto/complete-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Task } from './entities/task.entity';
+import { Task, TaskStatus } from './entities/task.entity';
 import { TaskAssignedV1Event } from './events/taskAssigned.v1.event';
+import { TaskCompletedV1Event } from './events/taskCompleted.v1';
 import { TaskCreatedV1Event } from './events/taskCreated.v1.event';
 
 @Injectable()
@@ -27,6 +29,7 @@ export class TasksService {
         {
           name: createTaskDto.name,
           userId: (await this.getRandomUser()).id,
+          taskStatus: TaskStatus.ASSIGNED,
         },
         transactionHost,
       );
@@ -69,6 +72,43 @@ export class TasksService {
     });
   }
 
+  async complete(completeTaskDto: CompleteTaskDto, userId: number) {
+    return this.sequelize.transaction(async (t) => {
+      const transactionHost = { transaction: t };
+      const task = await this.taskModel.findOne({
+        where: { id: completeTaskDto.id },
+        ...transactionHost,
+      });
+
+      if (!task) throw new Error('Task is null');
+      if (task.userId !== userId)
+        throw new UnauthorizedException("You can't complete this task");
+      if (task.taskStatus === TaskStatus.COMPLETED)
+        throw new Error('Task is already completed');
+
+      task.taskStatus = TaskStatus.COMPLETED;
+      const savedTask = await task.save(transactionHost);
+
+      if (!savedTask) throw new Error('Saved task is null');
+
+      const event = new TaskCompletedV1Event(savedTask.id, savedTask.userId);
+      const payload = await this.schemaRegistry.serialize(
+        TaskCompletedV1Event.EVENT_NAME,
+        TaskCompletedV1Event.VERSION,
+        event,
+      );
+
+      await this.outboxModel.create(
+        {
+          eventName: TaskCompletedV1Event.EVENT_NAME,
+          eventVersion: TaskCompletedV1Event.VERSION,
+          payload,
+        },
+        transactionHost,
+      );
+    });
+  }
+
   findAll() {
     return this.taskModel.findAll();
   }
@@ -86,7 +126,7 @@ export class TasksService {
       },
     });
     if (users.length === 0) throw new Error('Users is empty');
-    
+
     const randomIndex = Math.floor(Math.random() * users.length);
     return users[randomIndex];
   }
