@@ -6,7 +6,6 @@ export class ValidationSchemaPipe<T> implements PipeTransform<any, Promise<T>> {
   private logger = new Logger(ValidationSchemaPipe.name);
   constructor(@Inject(SchemaRegistry) private schemaRegistry: SchemaRegistry) {}
   async transform(value: any, metadata: ArgumentMetadata) {
-    this.logger.log('read ', value);
     if (!value) throw new RpcException('value is null');
     if (!value.payload) throw new RpcException('value.payload is null');
 
