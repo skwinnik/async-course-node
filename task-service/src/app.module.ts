@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
+import { RolesModule } from './roles/roles.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -34,6 +35,7 @@ import { TasksModule } from './tasks/tasks.module';
       }),
     }),
     UsersModule,
+    RolesModule,
     SchemaRegistryModule.forRoot('http://schema-registry'),
     AuthModule,
     TasksModule,

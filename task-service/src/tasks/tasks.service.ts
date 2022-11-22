@@ -1,8 +1,9 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
+import { RolesService } from 'src/roles/roles.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './entities/task.entity';
@@ -14,6 +15,7 @@ export class TasksService {
   constructor(
     private sequelize: Sequelize,
     private schemaRegistry: SchemaRegistry,
+    private rolesService: RolesService,
     private usersSerivce: UsersService,
     @InjectModel(Task) private taskModel: typeof Task,
     @InjectModel(Outbox) private outboxModel: typeof Outbox,
@@ -24,7 +26,7 @@ export class TasksService {
       const task = await this.taskModel.create(
         {
           name: createTaskDto.name,
-          userId: (await this.getRandomUser()).id
+          userId: (await this.getRandomUser()).id,
         },
         transactionHost,
       );
@@ -76,12 +78,15 @@ export class TasksService {
   }
 
   private async getRandomUser() {
-    throw new NotImplementedException();
+    const role = await this.rolesService.findOneByName('user');
+    if (!role) throw new Error('Role is null');
     const users = await this.usersSerivce.findAll({
       where: {
-        roleId: 1,
+        roleId: role.id,
       },
     });
+    if (users.length === 0) throw new Error('Users is empty');
+    
     const randomIndex = Math.floor(Math.random() * users.length);
     return users[randomIndex];
   }

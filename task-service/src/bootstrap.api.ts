@@ -8,11 +8,13 @@ import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 export async function bootstrapApi() {
-  const app = await NestFactory.create(AppModule);
-  NestMicroservice;
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'debug', 'log', 'verbose'],
+  });
+  
   const config = new DocumentBuilder()
-    .setTitle('Auth Service')
-    .setDescription('The Auth Service API description')
+    .setTitle('Task Service')
+    .setDescription('The Task Service API description')
     .setVersion('1.0')
     .addSecurity('ApiKeyAuth', {
       type: 'http',
@@ -47,7 +49,7 @@ function configureMicroservice(app: INestApplication) {
           groupId: 'task-service',
         },
         subscribe: {
-          topics: [new RegExp('user\..*')],
+          topics: [new RegExp('user..*'), new RegExp('role..*')],
           fromBeginning: true,
         },
         autoCommit: true,
