@@ -76,6 +76,8 @@ export class TransactionsService {
   async taskAssigned(taskId: number, userId: number) {
     const task = await this.tasksService.findOne(taskId);
     const taskPrice = await this.taskPricesService.getOrCreate(taskId);
+
+    // TODO make sure that no transactionPeriods created in parallel
     const transactionPeriod =
       await this.transactionPeriodsService.getOrCreate();
     if (!task) throw new Error('Task not found');
@@ -95,6 +97,8 @@ export class TransactionsService {
   async taskCompleted(taskId: number, userId: number) {
     const task = await this.tasksService.findOne(taskId);
     const taskPrice = await this.taskPricesService.getOrCreate(taskId);
+
+    // TODO make sure that no transactionPeriods created in parallel
     const transactionPeriod =
       await this.transactionPeriodsService.getOrCreate();
     if (!task) throw new Error('Task not found');
