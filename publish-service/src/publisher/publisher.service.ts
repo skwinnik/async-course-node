@@ -21,8 +21,10 @@ export class PublisherService implements OnApplicationShutdown {
   ) {}
 
   async poll() {
-    try {
-      while (!this.shutdownRequested) {
+    while (!this.shutdownRequested) {
+      const transaction = await this.sequelize.transaction();
+
+      try {
         const count = await this.outbox.count({
           where: { sentAt: null },
         });
@@ -32,7 +34,6 @@ export class PublisherService implements OnApplicationShutdown {
           continue;
         }
 
-        const transaction = await this.sequelize.transaction();
         const outbox = await this.outbox.findAll({
           where: { sentAt: null },
           order: [['createdAt', 'ASC']],
@@ -50,9 +51,10 @@ export class PublisherService implements OnApplicationShutdown {
         }
 
         await transaction.commit();
+      } catch (e) {
+        this.logger.error('PublisherService.listen() error: ' + e);
+        await transaction.rollback();
       }
-    } catch (e) {
-      this.logger.error('PublisherService.listen() error: ' + e);
     }
   }
 
