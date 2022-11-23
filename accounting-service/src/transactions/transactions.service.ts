@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { TasksService } from 'src/tasks/tasks.service';
@@ -12,6 +13,7 @@ import { TransactionPeriodsService } from './transaction.periods.service';
 export class TransactionsService {
   constructor(
     private sequelize: Sequelize,
+    private schemaRegistry: SchemaRegistry,
     private tasksService: TasksService,
     private taskPricesService: TaskPricesService,
     private transactionPeriodsService: TransactionPeriodsService,
@@ -43,7 +45,7 @@ export class TransactionsService {
 
       if (!transaction) throw new Error('Transaction not created');
 
-      const payload = new TransactionCreatedV1Event(
+      const event = new TransactionCreatedV1Event(
         transaction.id,
         transaction.transactionPeriodId,
         transaction.userId,
@@ -52,6 +54,12 @@ export class TransactionsService {
         transaction.credit,
         transaction.debit,
         transaction.taskId,
+      );
+
+      const payload = await this.schemaRegistry.serialize(
+        TransactionCreatedV1Event.EVENT_NAME,
+        TransactionCreatedV1Event.VERSION,
+        event,
       );
 
       await this.outboxModel.create(

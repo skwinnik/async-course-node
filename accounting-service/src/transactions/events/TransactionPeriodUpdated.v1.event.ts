@@ -6,9 +6,12 @@ export class TransactionPeriodUpdatedV1Event {
 
   constructor(
     public id: number,
-    public startedAt: Date,
+    public startedAt: string | Date,
     public isOpen: boolean,
-  ) {}
+  ) {
+    if (this.startedAt instanceof Date)
+      this.startedAt = this.startedAt.toISOString();
+  }
 }
 
 export const TransactionPeriodUpdatedV1EventSchema: JSONSchemaType<TransactionPeriodUpdatedV1Event> =
@@ -16,7 +19,7 @@ export const TransactionPeriodUpdatedV1EventSchema: JSONSchemaType<TransactionPe
     type: 'object',
     properties: {
       id: { type: 'number' },
-      startedAt: { $ref: 'string', format: 'date-time' },
+      startedAt: { type: 'string', format: 'date-time' },
       isOpen: { type: 'boolean' },
     },
     required: ['id', 'startedAt', 'isOpen'],

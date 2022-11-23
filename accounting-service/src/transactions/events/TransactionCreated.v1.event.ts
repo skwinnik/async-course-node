@@ -9,11 +9,14 @@ export class TransactionCreatedV1Event {
     public transactionPeriodId: number,
     public userId: number,
     public description: string,
-    public createdAt: Date,
+    public createdAt: string | Date,
     public credit: number,
     public debit: number,
     public taskId?: number,
-  ) {}
+  ) {
+    if (this.createdAt instanceof Date)
+      this.createdAt = this.createdAt.toISOString();
+  }
 }
 
 export const TransactionCreatedV1EventSchema: JSONSchemaType<TransactionCreatedV1Event> =
@@ -24,7 +27,7 @@ export const TransactionCreatedV1EventSchema: JSONSchemaType<TransactionCreatedV
       transactionPeriodId: { type: 'number' },
       userId: { type: 'number' },
       description: { type: 'string' },
-      createdAt: { $ref: 'string', format: 'date-time' },
+      createdAt: { type: 'string', format: 'date-time' },
       credit: { type: 'number' },
       debit: { type: 'number' },
       taskId: { type: 'number', nullable: true },
