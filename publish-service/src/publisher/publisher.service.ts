@@ -60,12 +60,14 @@ export class PublisherService implements OnApplicationShutdown {
   async publishMessage(message: Outbox) {
     const topic = `${message.eventName}.v${message.eventVersion}`;
     console.log('Publishing message: ', message.payload, ' to topic: ', topic);
-
     const result = await firstValueFrom(
       this.client.emit(topic, {
-        event_name: message.eventName,
-        event_version: message.eventVersion,
-        payload: message.payload,
+        key: message.id,
+        value: {
+          event_name: message.eventName,
+          event_version: message.eventVersion,
+          payload: message.payload,
+        },
       }),
     );
     console.log('Publishing result: ', result);
