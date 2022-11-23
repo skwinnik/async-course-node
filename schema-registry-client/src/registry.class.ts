@@ -1,4 +1,5 @@
 import Ajv, { JSONSchemaType } from 'ajv';
+import addFormats from 'ajv-formats';
 import { Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -11,6 +12,7 @@ export class SchemaRegistry {
     private httpService: HttpService,
   ) {
     this.ajv = new Ajv();
+    addFormats(this.ajv);
   }
 
   private async getSchema(name: string, version: number): Promise<string | undefined> {
