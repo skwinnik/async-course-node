@@ -22,26 +22,25 @@ export class PublisherService implements OnApplicationShutdown {
 
   async poll() {
     while (!this.shutdownRequested) {
+      const count = await this.outbox.count({
+        where: { sentAt: null },
+      });
+
+      if (count <= 0) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        continue;
+      }
+
       const transaction = await this.sequelize.transaction();
+      const outbox = await this.outbox.findAll({
+        where: { sentAt: null },
+        order: [['createdAt', 'ASC']],
+        limit: 1,
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
 
       try {
-        const count = await this.outbox.count({
-          where: { sentAt: null },
-        });
-
-        if (count <= 0) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          continue;
-        }
-
-        const outbox = await this.outbox.findAll({
-          where: { sentAt: null },
-          order: [['createdAt', 'ASC']],
-          limit: 1,
-          transaction,
-          lock: transaction.LOCK.UPDATE,
-        });
-
         for (const message of outbox) {
           await this.publishMessage(message);
           await this.outbox.update(
