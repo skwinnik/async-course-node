@@ -74,7 +74,7 @@ export class SchemaRegistry {
     const validate = this.ajv.compile(schema);
 
     if (validate(object)) return JSON.stringify(object);
-    else throw new Error(`Invalid payload: ${validate.errors}`);
+    else throw new Error(`Invalid payload: ${JSON.stringify(validate.errors)}`);
   }
 
   public async deserialize<T>(
@@ -91,7 +91,7 @@ export class SchemaRegistry {
 
     const json = JSON.parse(payload);
     if (validate(json)) return json as T;
-    else throw new Error(`Invalid payload: ${validate.errors}`);
+    else throw new Error(`Invalid payload: ${JSON.stringify(validate.errors)}`);
   }
 
   public async register<T>(
