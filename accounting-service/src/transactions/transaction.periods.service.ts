@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { TransactionPeriod } from './entities/transaction.period.entity';
-import { TransactionPeriodCreatedV1Event } from './events/TransactionPeriodCreated.v1.event';
-import { TransactionPeriodUpdatedV1Event } from './events/TransactionPeriodUpdated.v1.event';
+import {
+  TransactionPeriodCreatedV1Event,
+  TransactionPeriodUpdatedV1Event,
+} from '@skwinnik/schema-registry-events';
 
 @Injectable()
 export class TransactionPeriodsService {

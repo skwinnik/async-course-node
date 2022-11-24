@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { TaskPrice } from './entities/task.price.entity';
-import { TaskPriceCreatedV1Event } from './events/TaskPriceCreated.v1.event';
+import { TaskPriceCreatedV1Event } from '@skwinnik/schema-registry-events';
 
 @Injectable()
 export class TaskPricesService {

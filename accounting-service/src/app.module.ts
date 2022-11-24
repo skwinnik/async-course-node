@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { SchemaRegistryModule } from '@skwinnik/schema-registry-client';
+import { SchemaRegistryModule } from '@skwinnik/schema-registry-client/dist/registry.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';

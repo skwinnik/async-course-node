@@ -1,7 +1,7 @@
 import { Body, Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
-import { UserCreatedV1Event } from './events/userCreated.v1.event';
+import { UserCreatedV1Event } from '@skwinnik/schema-registry-events';
 import { UsersService } from './users.service';
 
 @Controller('users')

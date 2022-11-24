@@ -1,6 +1,6 @@
 import { ArgumentMetadata, Inject, Logger, PipeTransform } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 
 export class ValidationSchemaPipe<T> implements PipeTransform<any, Promise<T>> {
   private logger = new Logger(ValidationSchemaPipe.name);

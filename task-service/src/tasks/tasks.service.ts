@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { RolesService } from 'src/roles/roles.service';
@@ -8,10 +8,12 @@ import { UsersService } from 'src/users/users.service';
 import { CompleteTaskDto } from './dto/complete-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task, TaskStatus } from './entities/task.entity';
-import { TaskAssignedV1Event } from './events/taskAssigned.v1.event';
-import { TaskCompletedV1Event } from './events/taskCompleted.v1';
-import { TaskCreatedV1Event } from './events/taskCreated.v1.event';
-import { TaskUpdatedV1Event } from './events/taskUpdated.v1.event';
+import {
+  TaskAssignedV1Event,
+  TaskCompletedV1Event,
+  TaskCreatedV1Event,
+  TaskUpdatedV1Event,
+} from '@skwinnik/schema-registry-events';
 
 @Injectable()
 export class TasksService {
