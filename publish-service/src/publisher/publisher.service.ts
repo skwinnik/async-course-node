@@ -21,26 +21,26 @@ export class PublisherService implements OnApplicationShutdown {
   ) {}
 
   async poll() {
-    try {
-      while (!this.shutdownRequested) {
-        const count = await this.outbox.count({
-          where: { sentAt: null },
-        });
+    while (!this.shutdownRequested) {
+      const count = await this.outbox.count({
+        where: { sentAt: null },
+      });
 
-        if (count <= 0) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          continue;
-        }
+      if (count <= 0) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        continue;
+      }
 
-        const transaction = await this.sequelize.transaction();
-        const outbox = await this.outbox.findAll({
-          where: { sentAt: null },
-          order: [['createdAt', 'ASC']],
-          limit: 1,
-          transaction,
-          lock: transaction.LOCK.UPDATE,
-        });
+      const transaction = await this.sequelize.transaction();
+      const outbox = await this.outbox.findAll({
+        where: { sentAt: null },
+        order: [['createdAt', 'ASC']],
+        limit: 1,
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
 
+      try {
         for (const message of outbox) {
           await this.publishMessage(message);
           await this.outbox.update(
@@ -50,21 +50,24 @@ export class PublisherService implements OnApplicationShutdown {
         }
 
         await transaction.commit();
+      } catch (e) {
+        this.logger.error('PublisherService.listen() error: ' + e);
+        await transaction.rollback();
       }
-    } catch (e) {
-      this.logger.error('PublisherService.listen() error: ' + e);
     }
   }
 
   async publishMessage(message: Outbox) {
     const topic = `${message.eventName}.v${message.eventVersion}`;
     console.log('Publishing message: ', message.payload, ' to topic: ', topic);
-
     const result = await firstValueFrom(
       this.client.emit(topic, {
-        event_name: message.eventName,
-        event_version: message.eventVersion,
-        payload: message.payload,
+        key: message.id,
+        value: {
+          event_name: message.eventName,
+          event_version: message.eventVersion,
+          payload: message.payload,
+        },
       }),
     );
     console.log('Publishing result: ', result);

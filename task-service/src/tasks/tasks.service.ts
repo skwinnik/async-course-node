@@ -11,6 +11,7 @@ import { Task, TaskStatus } from './entities/task.entity';
 import { TaskAssignedV1Event } from './events/taskAssigned.v1.event';
 import { TaskCompletedV1Event } from './events/taskCompleted.v1';
 import { TaskCreatedV1Event } from './events/taskCreated.v1.event';
+import { TaskUpdatedV1Event } from './events/taskUpdated.v1.event';
 
 @Injectable()
 export class TasksService {
@@ -36,7 +37,12 @@ export class TasksService {
 
       if (!task) throw new Error('Task is null');
 
-      const event = new TaskCreatedV1Event(task.id, task.name);
+      const event = new TaskCreatedV1Event(
+        task.id,
+        task.userId,
+        task.name,
+        task.taskStatus,
+      );
       const payload = await this.schemaRegistry.serialize(
         TaskCreatedV1Event.EVENT_NAME,
         TaskCreatedV1Event.VERSION,
@@ -91,18 +97,42 @@ export class TasksService {
 
       if (!savedTask) throw new Error('Saved task is null');
 
-      const event = new TaskCompletedV1Event(savedTask.id, savedTask.userId);
+      const event = new TaskUpdatedV1Event(
+        task.id,
+        task.userId,
+        task.name,
+        task.taskStatus,
+      );
       const payload = await this.schemaRegistry.serialize(
+        TaskCreatedV1Event.EVENT_NAME,
+        TaskCreatedV1Event.VERSION,
+        event,
+      );
+
+      await this.outboxModel.create(
+        {
+          eventName: TaskUpdatedV1Event.EVENT_NAME,
+          eventVersion: TaskUpdatedV1Event.VERSION,
+          payload: payload,
+        },
+        transactionHost,
+      );
+
+      const completedEvent = new TaskCompletedV1Event(
+        savedTask.id,
+        savedTask.userId,
+      );
+      const completedPayload = await this.schemaRegistry.serialize(
         TaskCompletedV1Event.EVENT_NAME,
         TaskCompletedV1Event.VERSION,
-        event,
+        completedEvent,
       );
 
       await this.outboxModel.create(
         {
           eventName: TaskCompletedV1Event.EVENT_NAME,
           eventVersion: TaskCompletedV1Event.VERSION,
-          payload,
+          payload: completedPayload,
         },
         transactionHost,
       );

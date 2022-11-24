@@ -1,4 +1,4 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({
   paranoid: true,
@@ -16,6 +16,8 @@ export class Schema extends Model {
   })
   version: number;
 
-  @Column
+  @Column({
+    type: DataType.TEXT
+  })
   json: string;
 }

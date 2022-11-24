@@ -1,4 +1,5 @@
 #!/bin/sh
+cd ..
 
 cd publish-service
 echo $PWD
@@ -20,8 +21,16 @@ echo $PWD
 echo 'Building...'
 docker build -t skwinnik/task-service-node . && cd ..
 
+cd accounting-service
+echo $PWD
+echo 'Building...'
+docker build -t skwinnik/accounting-service-node . && cd ..
+
 
 docker push skwinnik/publish-service-node
 docker push skwinnik/schema-registry-node
 docker push skwinnik/auth-service-node
 docker push skwinnik/task-service-node
+docker push skwinnik/accounting-service-node
+
+cd .helm
