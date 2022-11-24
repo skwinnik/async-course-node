@@ -77,9 +77,7 @@ export class TransactionsService {
     const task = await this.tasksService.findOne(taskId);
     const taskPrice = await this.taskPricesService.getOrCreate(taskId);
 
-    // TODO make sure that no transactionPeriods created in parallel
-    const transactionPeriod =
-      await this.transactionPeriodsService.getOrCreate();
+    const transactionPeriod = await this.transactionPeriodsService.get();
     if (!task) throw new Error('Task not found');
     if (!taskPrice) throw new Error('Task price not found');
     if (!transactionPeriod) throw new Error('Transaction period not found');
@@ -98,9 +96,7 @@ export class TransactionsService {
     const task = await this.tasksService.findOne(taskId);
     const taskPrice = await this.taskPricesService.getOrCreate(taskId);
 
-    // TODO make sure that no transactionPeriods created in parallel
-    const transactionPeriod =
-      await this.transactionPeriodsService.getOrCreate();
+    const transactionPeriod = await this.transactionPeriodsService.get();
     if (!task) throw new Error('Task not found');
     if (!taskPrice) throw new Error('Task price not found');
     if (!transactionPeriod) throw new Error('Transaction period not found');

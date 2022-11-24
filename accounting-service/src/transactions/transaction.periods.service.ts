@@ -17,14 +17,16 @@ export class TransactionPeriodsService {
     @InjectModel(Outbox) private outboxModel: typeof Outbox,
   ) {}
 
-  async getOrCreate() {
+  async get() {
     let transactionPeriod = await TransactionPeriod.findOne({
       where: { isOpen: true },
     });
-    if (transactionPeriod) return transactionPeriod;
+    return transactionPeriod;
+  }
 
+  async create() {
     return this.sequelize.transaction(async (transaction) => {
-      transactionPeriod = await TransactionPeriod.create(
+      const transactionPeriod = await TransactionPeriod.create(
         { startedAt: new Date() },
         { transaction },
       );
