@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Task, TaskStatus } from './entities/task.entity';
-import { TaskCreatedV1Event } from './events/taskCreated.v1.event';
-import { TaskUpdatedV1Event } from './events/taskUpdated.v1.event';
+import {
+  TaskCreatedV1Event,
+  TaskUpdatedV1Event,
+} from '@skwinnik/schema-registry-events';
 
 @Injectable()
 export class TasksService {

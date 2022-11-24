@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { User } from 'src/db/models/user';
-import { UserCreatedV1Event } from './events/userCreated.v1.event';
-import { UserDeletedV1Event } from './events/userDeleted.v1.event';
-import { UserUpdatedV1Event } from './events/userUpdated.v1.event';
+import {
+  UserCreatedV1Event,
+  UserDeletedV1Event,
+  UserUpdatedV1Event,
+} from '@skwinnik/schema-registry-events';
 
 import * as bcrypt from 'bcryptjs';
 

@@ -1,8 +1,7 @@
 import { Controller, Body } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
-import { TaskCreatedV1Event } from './events/taskCreated.v1.event';
-import { TaskUpdatedV1Event } from './events/taskUpdated.v1.event';
+import { TaskCreatedV1Event, TaskUpdatedV1Event } from '@skwinnik/schema-registry-events';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')

@@ -1,16 +1,13 @@
 {
   "name": "@skwinnik/schema-registry-client",
-  "version": "0.0.7",
+  "version": "0.0.1",
   "description": "",
   "author": "Pavel Skrinnik <screen0994@gmail.com>",
   "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "start:dev": "tsc -w",
-    "build": "tsc",
-    "prepare": "npm run build",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "tslint -p tsconfig.json -c tslint.json"
+    "build": "tsc"
   },
   "peerDependencies": {
     "@nestjs/axios": "^1.0.0",

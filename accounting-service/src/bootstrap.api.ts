@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { registerEvents } from './register.events';
-import { NestMicroservice, Transport } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 

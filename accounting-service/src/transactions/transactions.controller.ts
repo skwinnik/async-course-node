@@ -1,8 +1,10 @@
 import { Body, Controller } from '@nestjs/common';
 import { Ctx, EventPattern, KafkaContext } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
-import { TaskAssignedV1Event } from 'src/tasks/events/taskAssigned.v1.event';
-import { TaskCompletedV1Event } from 'src/tasks/events/taskCompleted.v1';
+import {
+  TaskCompletedV1Event,
+  TaskAssignedV1Event,
+} from '@skwinnik/schema-registry-events';
 import { TransactionsService } from './transactions.service';
 
 @Controller('transactions')
@@ -13,7 +15,6 @@ export class TransactionsController {
   async taskAssigned(
     @Body(ValidationSchemaPipe<TaskAssignedV1Event>)
     taskAssignedV1Event: TaskAssignedV1Event,
-    @Ctx() context: KafkaContext,
   ) {
     //TODO make idempotent
     await this.transactionsService.taskAssigned(

@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { SchemaRegistry } from '@skwinnik/schema-registry-client/registry.class';
+import { SchemaRegistry } from '@skwinnik/schema-registry-client/dist/registry.class';
 import { Sequelize } from 'sequelize-typescript';
 import { Outbox } from 'src/db/models/outbox';
 import { Role } from 'src/db/models/role';
-import { RoleCreatedV1Event } from './events/roleCreated.v1.event';
-import { RoleDeletedV1Event } from './events/roleDeleted.v1.event';
-import { RoleUpdatedV1Event } from './events/roleUpdated.v1.event';
+import {
+  RoleCreatedV1Event,
+  RoleDeletedV1Event,
+  RoleUpdatedV1Event,
+} from '@skwinnik/schema-registry-events';
 
 @Injectable()
 export class RolesService {
@@ -56,10 +58,13 @@ export class RolesService {
     }
   }
 
-  async delete(id: number) : Promise<number | null> {
+  async delete(id: number): Promise<number | null> {
     try {
       return await this.sequelize.transaction(async (t) => {
-        const deleted = await this.roleModel.destroy({ where: { id }, transaction: t });
+        const deleted = await this.roleModel.destroy({
+          where: { id },
+          transaction: t,
+        });
 
         //nothing is deleted, skip event
         if (deleted === 0) return null;

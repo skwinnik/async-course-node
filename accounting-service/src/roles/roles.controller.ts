@@ -1,7 +1,7 @@
 import { Body, Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
-import { RoleCreatedV1Event } from './events/roleCreated.v1.event';
+import { RoleCreatedV1Event } from '@skwinnik/schema-registry-events';
 import { RolesService } from './roles.service';
 
 @Controller('roles')
