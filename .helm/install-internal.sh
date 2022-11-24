@@ -4,3 +4,4 @@
 ./install-auth-service.sh
 ./install-task-service.sh
 ./install-accounting-service.sh
+./install-analytics-service.sh

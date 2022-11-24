@@ -16,10 +16,14 @@ docker build -q -f Dockerfile.task-service -t skwinnik/task-service-node .
 echo 'Building accounting-service'
 docker build -q -f Dockerfile.accounting-service -t skwinnik/accounting-service-node .
 
+echo 'Building analytics-service'
+docker build -q -f Dockerfile.analytics-service -t skwinnik/analytics-service-node .
+
 docker push -q skwinnik/publish-service-node
 docker push -q skwinnik/schema-registry-node
 docker push -q skwinnik/auth-service-node
 docker push -q skwinnik/task-service-node
 docker push -q skwinnik/accounting-service-node
+docker push -q skwinnik/analytics-service-node
 
 cd .helm
