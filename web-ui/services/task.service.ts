@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { LoggedInDto } from "@/types/auth/loggedIn.dto";
-import { LoginDto } from "@/types/auth/login.dto";
 import getConfig from "next/config";
+import { TaskDto } from "@/types/task/task.dto";
+import { getSession } from "next-auth/react";
 
-class AuthService {
+class TaskService {
   private http: AxiosInstance;
   constructor() {
     const { publicRuntimeConfig } = getConfig();
@@ -15,17 +15,29 @@ class AuthService {
       baseURL: publicRuntimeConfig.baseUrl,
     });
   }
-  login(dto: LoginDto): Promise<AxiosResponse<LoggedInDto, any>> {
-    return this.http.post("/b/auth/login", dto);
+
+  async getAll(userId: string): Promise<AxiosResponse<TaskDto[], any>> {
+    const res = await this.http.get(`/b/tasks/all/${userId}`);
+    if (res.status !== 200)
+      throw new Error("Error fetching tasks", {
+        cause: res,
+      });
+
+    return res.data;
   }
 
-  me() {
-    return this.http.get("/b/auth/me");
+  async complete(taskId: number): Promise<void> {
+    const res = await this.http.post("/b/tasks/complete", { id: taskId });
+    if (res.status !== 201)
+      throw new Error("Error completing task", {
+        cause: res,
+      });
   }
 
-  setToken(token: string) {
+  withToken(token: string) {
     this.http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    return this;
   }
 }
 
-export const authService = new AuthService();
+export const taskService = new TaskService();

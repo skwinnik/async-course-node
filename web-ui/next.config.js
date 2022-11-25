@@ -8,6 +8,10 @@ const nextConfig = {
         source: "/b/auth/:path*",
         destination: `${process.env.AUTH_SERVICE}/auth/:path*`,
       },
+      {
+        source: "/b/tasks/:path*",
+        destination: `${process.env.TASK_SERVICE}/tasks/:path*`,
+      },
     ];
   },
   publicRuntimeConfig: {
