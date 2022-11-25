@@ -14,6 +14,7 @@ import {
   TaskCreatedV1Event,
   TaskUpdatedV1Event,
 } from '@skwinnik/schema-registry-events';
+import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class TasksService {
@@ -141,8 +142,8 @@ export class TasksService {
     });
   }
 
-  findAll() {
-    return this.taskModel.findAll();
+  findAll(options: FindOptions<Task>) {
+    return this.taskModel.findAll(options);
   }
 
   findOne(id: number) {
