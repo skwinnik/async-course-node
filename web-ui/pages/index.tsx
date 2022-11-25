@@ -3,7 +3,7 @@ import { NextPage } from "next";
 const Index: NextPage = () => {
   return (
     <div>
-      <h1>Index</h1>
+      <h1>Hi.</h1>
     </div>
   );
 };
