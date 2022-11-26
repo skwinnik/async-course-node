@@ -7,7 +7,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <Header />
-      <div className="container mx-auto px-5">
+      <div className="container mx-auto p-5">
         <Component {...pageProps} />
       </div>
     </SessionProvider>

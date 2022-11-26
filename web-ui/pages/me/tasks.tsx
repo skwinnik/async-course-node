@@ -8,7 +8,7 @@ interface IModel {
   tasks: TaskDto[];
 }
 
-const Me: NextPage<IModel> = ({ tasks }) => {
+const Tasks: NextPage<IModel> = ({ tasks }) => {
   return (
     <div>
       <h1 className="text-3xl mb-3">Tasks</h1>
@@ -16,7 +16,7 @@ const Me: NextPage<IModel> = ({ tasks }) => {
     </div>
   );
 };
-export default Me;
+export default Tasks;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
