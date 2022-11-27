@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import getConfig from "next/config";
 import { TaskDto } from "@/types/task/task.dto";
-import { getSession } from "next-auth/react";
 
 class TaskService {
   private http: AxiosInstance;
@@ -16,8 +15,8 @@ class TaskService {
     });
   }
 
-  async getAll(userId: string): Promise<AxiosResponse<TaskDto[], any>> {
-    const res = await this.http.get(`/b/tasks/all/${userId}`);
+  async getAll(userId: string): Promise<TaskDto[]> {
+    const res = await this.http.get<TaskDto[]>(`/b/tasks/all/${userId}`);
     if (res.status !== 200)
       throw new Error("Error fetching tasks", {
         cause: res,

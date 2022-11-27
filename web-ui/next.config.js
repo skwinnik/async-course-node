@@ -12,6 +12,10 @@ const nextConfig = {
         source: "/b/tasks/:path*",
         destination: `${process.env.TASK_SERVICE}/tasks/:path*`,
       },
+      {
+        source: "/b/transactions/:path*",
+        destination: `${process.env.ACCOUNTING_SERVICE}/transactions/:path*`
+      },
     ];
   },
   publicRuntimeConfig: {
