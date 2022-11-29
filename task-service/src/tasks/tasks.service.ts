@@ -45,6 +45,7 @@ export class TasksService {
         task.userId,
         task.name,
         task.taskStatus,
+        task.version,
       );
       const payload = await this.schemaRegistry.serialize(
         TaskCreatedV1Event.EVENT_NAME,
@@ -105,10 +106,11 @@ export class TasksService {
         task.userId,
         task.name,
         task.taskStatus,
+        task.version,
       );
       const payload = await this.schemaRegistry.serialize(
-        TaskCreatedV1Event.EVENT_NAME,
-        TaskCreatedV1Event.VERSION,
+        TaskUpdatedV1Event.EVENT_NAME,
+        TaskUpdatedV1Event.VERSION,
         event,
       );
 

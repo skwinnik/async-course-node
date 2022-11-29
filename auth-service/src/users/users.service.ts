@@ -51,7 +51,12 @@ export class UsersService {
           },
           transactionHost,
         );
-        const event = new UserCreatedV1Event(user.id, user.roleId, user.name);
+        const event = new UserCreatedV1Event(
+          user.id,
+          user.roleId,
+          user.name,
+          user.version,
+        );
         const payload = await this.schemaRegistry.serialize(
           UserCreatedV1Event.EVENT_NAME,
           UserCreatedV1Event.VERSION,
@@ -115,15 +120,17 @@ export class UsersService {
   ): Promise<number | null> {
     try {
       return await this.sequelize.transaction(async (t) => {
-        const updated = await this.userModel.update(
-          { name, roleId },
-          { where: { id }, transaction: t },
-        );
+        let user = await this.userModel.findOne({ where: { id } });
+        if (!user) return null;
 
-        //nothing is updated, skip event
-        if (updated[0] === 0) return null;
+        user.name = name;
+        user.roleId = roleId;
 
-        const event = new UserUpdatedV1Event(id, roleId, name);
+        await user.save({
+          transaction: t,
+        });
+
+        const event = new UserUpdatedV1Event(id, roleId, name, user!.version);
         const payload = await this.schemaRegistry.serialize(
           UserUpdatedV1Event.EVENT_NAME,
           UserUpdatedV1Event.VERSION,
@@ -138,7 +145,7 @@ export class UsersService {
           { transaction: t },
         );
 
-        return updated[0];
+        return user.id;
       });
     } catch (e) {
       this.logger.error('update user error', e);

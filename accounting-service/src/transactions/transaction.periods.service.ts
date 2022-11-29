@@ -15,12 +15,12 @@ export class TransactionPeriodsService {
     private sequelize: Sequelize,
     private schemaRegistry: SchemaRegistry,
     @InjectModel(TransactionPeriod)
-    TransactionPeriodModel: typeof TransactionPeriod,
+    private transactionPeriodModel: typeof TransactionPeriod,
     @InjectModel(Outbox) private outboxModel: typeof Outbox,
   ) {}
 
   async get() {
-    let transactionPeriod = await TransactionPeriod.findOne({
+    let transactionPeriod = await this.transactionPeriodModel.findOne({
       where: { isOpen: true },
     });
     return transactionPeriod;
@@ -28,7 +28,7 @@ export class TransactionPeriodsService {
 
   async create() {
     return this.sequelize.transaction(async (transaction) => {
-      const transactionPeriod = await TransactionPeriod.create(
+      const transactionPeriod = await this.transactionPeriodModel.create(
         { startedAt: new Date() },
         { transaction },
       );
@@ -39,6 +39,7 @@ export class TransactionPeriodsService {
         transactionPeriod.id,
         transactionPeriod.startedAt,
         transactionPeriod.isOpen,
+        transactionPeriod.version
       );
       const payload = await this.schemaRegistry.serialize(
         TransactionPeriodCreatedV1Event.EVENT_NAME,
@@ -81,6 +82,7 @@ export class TransactionPeriodsService {
         transactionPeriod.id,
         transactionPeriod.startedAt,
         transactionPeriod.isOpen,
+        transactionPeriod.version
       );
 
       const payload = await this.schemaRegistry.serialize(

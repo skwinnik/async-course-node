@@ -1,6 +1,8 @@
 import { Column, Model, Table } from 'sequelize-typescript';
 
-@Table
+@Table({
+  version: true,
+})
 export class TransactionPeriod extends Model {
   @Column({
     primaryKey: true,
