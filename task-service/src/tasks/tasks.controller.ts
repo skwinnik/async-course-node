@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   UnauthorizedException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -18,6 +19,8 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { HasRoles } from 'src/auth/decorators/roles.decorator';
 import { CompleteTaskDto } from './dto/complete-task.dto';
 import { Request } from 'express';
+import { TaskDto } from './dto/task.dto';
+import { Task } from './entities/task.entity';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -38,5 +41,20 @@ export class TasksController {
   complete(@Body() completeTaskDto: CompleteTaskDto, @Req() req: Request) {
     if (!req.user?.id) throw new UnauthorizedException();
     return this.tasksService.complete(completeTaskDto, req.user.id);
+  }
+
+  @Get('/all/:userId')
+  @ApiBody({ type: Array<TaskDto> })
+  @HasRoles('user')
+  async getAll(
+    @Req() req: Request,
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    if (!req.user?.id) throw new UnauthorizedException();
+    if (req.user.id !== userId) throw new UnauthorizedException();
+
+    return (await this.tasksService.findAll({ where: { userId: userId } })).map(
+      (t) => new TaskDto(t),
+    );
   }
 }

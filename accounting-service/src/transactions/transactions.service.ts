@@ -8,6 +8,7 @@ import { Transaction } from './entities/transaction.entity';
 import { TransactionCreatedV1Event } from '@skwinnik/schema-registry-events';
 import { TaskPricesService } from './task.prices.service';
 import { TransactionPeriodsService } from './transaction.periods.service';
+import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class TransactionsService {
@@ -109,5 +110,9 @@ export class TransactionsService {
       `Completion reward for task: ${task.name}`,
       taskId,
     );
+  }
+
+  async findAll(options: FindOptions<Transaction>) {
+    return await this.transactionModel.findAll(options);
   }
 }

@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import { authService } from "@/services/auth.service";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { LoginDto } from "@/types/auth/login.dto";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
@@ -19,11 +19,11 @@ export default NextAuth({
       async authorize(credentials, req) {
         if (!credentials || !credentials.username || !credentials.password)
           return null;
-        
+
         const response = await authService.login(
           new LoginDto(credentials.username, credentials.password)
         );
-        
+
         if (response.status !== 201) return null;
 
         // If no error and we have user data, return it
@@ -40,6 +40,7 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token = {
+          id: user.id,
           name: user.name,
           role: user.role,
           access_token: user.access_token,
@@ -50,6 +51,7 @@ export default NextAuth({
 
     async session({ session, token }) {
       session.user = {
+        id: token.id,
         name: token.name,
         role: token.role,
         access_token: token.access_token,
@@ -57,4 +59,6 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);
