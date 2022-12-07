@@ -27,6 +27,9 @@ export class TransactionPeriodsService {
   }
 
   async create() {
+    const openPeriod = await this.get();
+    if (openPeriod) throw new Error('Transaction period already open');
+    
     return this.sequelize.transaction(async (transaction) => {
       const transactionPeriod = await this.transactionPeriodModel.create(
         { startedAt: new Date() },
