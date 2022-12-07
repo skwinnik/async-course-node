@@ -52,11 +52,11 @@ export class MeService {
         .slice(0, 3);
       me.updated_at = new Date();
 
-      this.logger.log(`Rebuilding Me view for user ${user.id}...`)
+      this.logger.log(`Rebuilding Me view for user ${user.id}...`);
       await this.meModel.findOneAndUpdate({ user_id: me.user_id }, me, {
         upsert: true,
       });
-      this.logger.log(`Rebuilding Me view for user ${user.id}... done`)
+      this.logger.log(`Rebuilding Me view for user ${user.id}... done`);
     }
   }
 
@@ -82,9 +82,10 @@ export class MeService {
       return;
     }
 
-    user.tasks_preview.push({ id, name, status, user_id });
-    user.tasks_preview.sort((a, b) => b.id - a.id);
-    user.tasks_preview = user.tasks_preview.slice(0, 3);
+    user.tasks_preview = [...user.tasks_preview, { id, name, status, user_id }]
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 3);
+
     user.updated_at = new Date();
 
     await user.save();
@@ -101,9 +102,9 @@ export class MeService {
       return;
     }
 
-    user.tasks_preview.push({ id, name, status, user_id });
-    user.tasks_preview.sort((a, b) => b.id - a.id);
-    user.tasks_preview = user.tasks_preview.slice(0, 3);
+    user.tasks_preview = [...user.tasks_preview, { id, name, status, user_id }]
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 3);
     user.updated_at = new Date();
 
     await user.save();
@@ -134,17 +135,21 @@ export class MeService {
       return;
     }
 
-    user.transactions_preview.push({
-      id,
-      transaction_period_id,
-      description,
-      created_at: new Date(created_at),
-      credit,
-      debit,
-      user_id,
-    });
-    user.transactions_preview.sort((a, b) => b.id - a.id);
-    user.transactions_preview = user.transactions_preview.slice(0, 3);
+    user.transactions_preview = [
+      ...user.transactions_preview,
+      {
+        id,
+        transaction_period_id,
+        description,
+        created_at: new Date(created_at),
+        credit,
+        debit,
+        user_id,
+      },
+    ]
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 3);
+
     user.updated_at = new Date();
 
     await user.save();
