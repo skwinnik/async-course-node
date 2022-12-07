@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { MeService } from './me.service';
 import { Cron } from '@nestjs/schedule';
 import { EventPattern } from '@nestjs/microservices';
@@ -10,14 +19,21 @@ import {
   UserCreatedV1Event,
 } from '@skwinnik/schema-registry-events';
 import { ApiParam } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Request } from 'express';
+import { HasRoles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('me')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@HasRoles('user')
 export class MeController {
   constructor(private readonly meService: MeService) {}
 
   @Get('/:userId')
   @ApiParam({ name: 'userId', type: 'number' })
-  async get(@Param('userId') userId: number) {
+  async get(@Param('userId', ParseIntPipe) userId: number, @Req() req: Request) {
+    if (req.user?.id !== userId) throw new UnauthorizedException();
     return this.meService.get(userId);
   }
 
