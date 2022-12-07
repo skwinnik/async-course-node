@@ -90,6 +90,25 @@ export class MeService {
     await user.save();
   }
 
+  async onTaskUpdated(
+    user_id: number,
+    { id, name, status }: { id: number; name: string; status: string },
+  ) {
+    const user = await this.meModel.findOne({ user_id });
+
+    if (!user) {
+      this.logger.warn('User not found', user_id);
+      return;
+    }
+
+    user.tasks_preview.push({ id, name, status, user_id });
+    user.tasks_preview.sort((a, b) => b.id - a.id);
+    user.tasks_preview = user.tasks_preview.slice(0, 3);
+    user.updated_at = new Date();
+
+    await user.save();
+  }
+
   async onTransactionCreated(
     user_id: number,
     {

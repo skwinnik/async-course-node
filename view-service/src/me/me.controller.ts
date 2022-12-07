@@ -5,6 +5,7 @@ import { EventPattern } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
 import {
   TaskCreatedV1Event,
+  TaskUpdatedV1Event,
   TransactionCreatedV1Event,
   UserCreatedV1Event,
 } from '@skwinnik/schema-registry-events';
@@ -56,6 +57,18 @@ export class MeController {
     event: TaskCreatedV1Event,
   ) {
     await this.meService.onTaskCreated(event.userId, {
+      id: event.id,
+      name: event.name,
+      status: event.status,
+    });
+  }
+
+  @EventPattern('task.updated.v1')
+  async onTaskUpdatedV1(
+    @Body(ValidationSchemaPipe<TaskUpdatedV1Event>)
+    event: TaskUpdatedV1Event,
+  ) {
+    await this.meService.onTaskUpdated(event.userId, {
       id: event.id,
       name: event.name,
       status: event.status,
