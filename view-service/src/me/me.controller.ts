@@ -4,6 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { EventPattern } from '@nestjs/microservices';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
 import {
+  TaskCreatedV1Event,
   TransactionCreatedV1Event,
   UserCreatedV1Event,
 } from '@skwinnik/schema-registry-events';
@@ -46,6 +47,18 @@ export class MeController {
       description: event.description,
       credit: event.credit,
       debit: event.debit,
+    });
+  }
+
+  @EventPattern('task.created.v1')
+  async onTaskCreatedV1(
+    @Body(ValidationSchemaPipe<TaskCreatedV1Event>)
+    event: TaskCreatedV1Event,
+  ) {
+    await this.meService.onTaskCreated(event.userId, {
+      id: event.id,
+      name: event.name,
+      status: event.status,
     });
   }
 }
