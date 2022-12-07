@@ -38,4 +38,8 @@ export class TransactionService {
     });
     await transaction.save();
   }
+
+  async findAll(): Promise<Transaction[]> {
+    return this.transactionModel.find().exec();
+  }
 }

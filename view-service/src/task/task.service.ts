@@ -48,4 +48,8 @@ export class TaskService {
       await task.save();
     }
   }
+
+  async findAll(): Promise<Task[]> {
+    return this.taskModel.find().exec();
+  }
 }

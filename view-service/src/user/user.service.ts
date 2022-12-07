@@ -11,4 +11,8 @@ export class UserService {
     const user = await this.userModel.create({ id, name, version });
     await user.save();
   }
+
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
 }

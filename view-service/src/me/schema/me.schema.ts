@@ -5,7 +5,9 @@ import { Transaction } from 'src/transaction/schema/transaction.schema';
 
 export type MeDocument = HydratedDocument<Me>;
 
-@Schema()
+@Schema({
+  optimisticConcurrency: true,
+})
 export class Me {
   @Prop()
   user_id: number;
@@ -21,6 +23,9 @@ export class Me {
 
   @Prop()
   transactions_preview: Transaction[];
+
+  @Prop()
+  updated_at: Date;
 }
 
 export const MeSchema = SchemaFactory.createForClass(Me);
