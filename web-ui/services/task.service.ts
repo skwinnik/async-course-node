@@ -15,16 +15,6 @@ class TaskService {
     });
   }
 
-  async getAll(userId: string): Promise<TaskDto[]> {
-    const res = await this.http.get<TaskDto[]>(`/b/tasks/all/${userId}`);
-    if (res.status !== 200)
-      throw new Error("Error fetching tasks", {
-        cause: res,
-      });
-
-    return res.data;
-  }
-
   async complete(taskId: number): Promise<void> {
     const res = await this.http.post("/b/tasks/complete", { id: taskId });
     if (res.status !== 201)

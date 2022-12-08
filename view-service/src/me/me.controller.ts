@@ -25,13 +25,13 @@ import { Request } from 'express';
 import { HasRoles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('me')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@HasRoles('user')
 export class MeController {
   constructor(private readonly meService: MeService) {}
 
   @Get('/:userId')
   @ApiParam({ name: 'userId', type: 'number' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @HasRoles('user')
   async get(@Param('userId', ParseIntPipe) userId: number, @Req() req: Request) {
     if (req.user?.id !== userId) throw new UnauthorizedException();
     return this.meService.get(userId);

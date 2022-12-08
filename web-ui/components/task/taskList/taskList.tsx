@@ -6,6 +6,7 @@ import { useState } from "react";
 
 interface IModel {
   tasks: TaskDto[];
+  viewOnly?: boolean;
 }
 const TaskList: NextPage<IModel> = (model) => {
   const { data: session, status } = useSession();
@@ -29,7 +30,7 @@ const TaskList: NextPage<IModel> = (model) => {
           >
             <div className="flex-1">{task.name}</div>
             <div className="flex-1">{task.status}</div>
-            <div className="flex-auto grow-0 shrink-0 w-36">
+            {!model.viewOnly && <div className="flex-auto grow-0 shrink-0 w-36">
               {task.status === "ASSIGNED" && (
                 <button
                   onClick={() => onComplete(task)}
@@ -46,7 +47,7 @@ const TaskList: NextPage<IModel> = (model) => {
                   Completed
                 </button>
               )}
-            </div>
+            </div>}
           </div>
         ))}
       </div>

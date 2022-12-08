@@ -1,15 +1,24 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Post, Type, UseGuards } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { ApiBody } from '@nestjs/swagger';
 import {
   TaskCreatedV1Event,
   TaskUpdatedV1Event,
 } from '@skwinnik/schema-registry-events';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ValidationSchemaPipe } from 'src/pipes/validationSchema.pipe';
 import { TaskService } from './task.service';
+import {IPageRequest} from '../common/page.request';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
+
+  @Post('/all/')
+  @UseGuards(JwtAuthGuard)
+  async getAllTasks(@Body() request: { userId: number } & IPageRequest) {
+    return this.taskService.find(request);
+  }
 
   @EventPattern('task.created.v1')
   async createTask(

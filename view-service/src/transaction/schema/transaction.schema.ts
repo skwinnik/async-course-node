@@ -28,6 +28,9 @@ export class Transaction {
 
   @Prop()
   debit: number;
+
+  @Prop()
+  task_id?: number;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

@@ -22,7 +22,7 @@ const TransactionList: NextPage<IModel> = (model) => {
             <div className="flex-1">{task.description}</div>
             <div className="flex-1">-${task.credit}</div>
             <div className="flex-1">${task.debit}</div>
-            <div className="flex-1">{task.createdAt}</div>
+            <div className="flex-1">{task.created_at}</div>
           </div>
         ))}
       </div>
