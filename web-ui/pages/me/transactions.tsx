@@ -1,5 +1,5 @@
 import TransactionList from "@/components/transaction/transactionList/transactionList";
-import { accountingService } from "@/services/accounting.service";
+import { viewService } from "@/services/view.service";
 import { TransactionDto } from "@/types/accounting/transaction.dto";
 import { GetServerSidePropsContext, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -36,14 +36,19 @@ export const getServerSideProps = async (
     };
   }
 
-  const transactions = await accountingService
+  const transactions = await viewService
     .withToken(session.user.access_token)
-    .getTransactions(session.user.id);
+    .getTransactions({
+      userId: session.user.id,
+      offset: 0,
+      limit: 10,
+      sort: { by: "id", order: "desc" },
+    });
 
   return {
     props: {
       session,
-      transactions,
+      transactions: transactions.data,
     },
   };
 };

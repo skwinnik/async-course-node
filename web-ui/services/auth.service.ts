@@ -19,10 +19,6 @@ class AuthService {
     return this.http.post("/b/auth/login", dto);
   }
 
-  me() {
-    return this.http.get("/b/auth/me");
-  }
-
   withToken(token: string) {
     this.http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     return this;

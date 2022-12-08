@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IPageRequest } from 'src/common/page.request';
+import { IPageResponse } from 'src/common/page.response';
 import { Task, TaskDocument } from './schema/task.schema';
 
 @Injectable()
@@ -51,5 +53,26 @@ export class TaskService {
 
   async findAll(): Promise<Task[]> {
     return this.taskModel.find().exec();
+  }
+
+  async find(
+    request: { userId: number } & IPageRequest,
+  ): Promise<IPageResponse<Task>> {
+    const total = await this.taskModel
+      .find({ user_id: request.userId })
+      .countDocuments();
+    const data = await this.taskModel
+      .find({ user_id: request.userId })
+      .sort({
+        [request.sort.by]: request.sort.order,
+      })
+      .skip(request.offset)
+      .limit(request.limit)
+      .exec();
+
+    return {
+      total,
+      data,
+    };
   }
 }

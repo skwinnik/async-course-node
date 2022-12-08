@@ -1,22 +1,28 @@
 import TaskList from "@/components/task/taskList/taskList";
+import TransactionList from "@/components/transaction/transactionList/transactionList";
 import { viewService } from "@/services/view.service";
-import { TaskDto } from "@/types/task/task.dto";
+import { MeView } from "@/types/view/me.view";
 import { GetServerSidePropsContext, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-interface IModel {
-  tasks: TaskDto[];
-}
 
-const Tasks: NextPage<IModel> = ({ tasks }) => {
+interface IModel {
+  me: MeView;
+}
+const Me: NextPage<IModel> = ({ me }) => {
   return (
-    <div>
-      <h1 className="text-3xl mb-3">Tasks</h1>
-      <TaskList tasks={tasks} />
+    <div className="flex">
+      <div className="flex-1">
+        <TaskList tasks={me.tasks_preview} viewOnly={true} />
+      </div>
+      <div className="flex-1">
+        <TransactionList transactions={me.transactions_preview} />
+      </div>
     </div>
   );
 };
-export default Tasks;
+
+export default Me;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -36,19 +42,14 @@ export const getServerSideProps = async (
     };
   }
 
-  const tasks = await viewService
+  const me = await viewService
     .withToken(session.user.access_token)
-    .getTasks({
-      userId: session.user.id,
-      offset: 0,
-      limit: 10,
-      sort: { by: "id", order: "desc" },
-    });
+    .getMeView(session.user.id);
 
   return {
     props: {
       session,
-      tasks: tasks.data,
+      me,
     },
   };
 };

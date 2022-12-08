@@ -5,6 +5,10 @@ const nextConfig = {
   rewrites() {
     return [
       {
+        source: "/b/view/:path*",
+        destination: `${process.env.VIEW_SERVICE}/:path*`,
+      },
+      {
         source: "/b/auth/:path*",
         destination: `${process.env.AUTH_SERVICE}/auth/:path*`,
       },
