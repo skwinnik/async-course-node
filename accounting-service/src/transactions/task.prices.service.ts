@@ -49,6 +49,8 @@ export class TaskPricesService {
           transaction,
         },
       );
+
+      return taskPrice;
     });
   }
 

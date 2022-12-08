@@ -9,6 +9,7 @@ export class TaskUpdatedV1Event {
     public readonly userId: number,
     public readonly name: string,
     public readonly status: string,
+    public readonly version: number,
   ) {}
 }
 
@@ -19,6 +20,7 @@ export const TaskUpdatedV1EventSchema: JSONSchemaType<TaskUpdatedV1Event> = {
     userId: { type: 'number' },
     name: { type: 'string' },
     status: { type: 'string' },
+    version: { type: 'number' },
   },
-  required: ['id', 'userId', 'name', 'status'],
+  required: ['id', 'userId', 'name', 'status', 'version'],
 };

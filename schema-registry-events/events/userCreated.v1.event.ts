@@ -8,6 +8,7 @@ export class UserCreatedV1Event {
     public readonly id: number,
     public readonly roleId: number,
     public readonly name: string,
+    public readonly version: number,
   ) {}
 }
 
@@ -17,6 +18,7 @@ export const UserCreatedV1EventSchema: JSONSchemaType<UserCreatedV1Event> = {
     id: { type: 'number' },
     roleId: { type: 'number' },
     name: { type: 'string' },
+    version: { type: 'number' },
   },
-  required: ['id', 'roleId', 'name'],
+  required: ['id', 'roleId', 'name', 'version'],
 };

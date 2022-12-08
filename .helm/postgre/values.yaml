@@ -1,7 +1,18 @@
 primary:
+  initdb:
+    user: postgres
+    password: qwerty
+    scripts:
+      init.sql: |
+        CREATE DATABASE "SchemaRegistry" WITH OWNER = postgres;
+        CREATE DATABASE "AuthService" WITH OWNER = postgres;
+        CREATE DATABASE "TaskService" WITH OWNER = postgres;
+        CREATE DATABASE "AccountingService" WITH OWNER = postgres;
+        CREATE DATABASE "AnalyticsService" WITH OWNER = postgres;
   persistence:
     enabled: true
     storageClass: nfs-client
 
 auth:
   postgresPassword: qwerty
+

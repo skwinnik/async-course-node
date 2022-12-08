@@ -4,6 +4,7 @@ import { Column, Model, Table } from 'sequelize-typescript';
   paranoid: true,
   createdAt: true,
   deletedAt: true,
+  version: true,
 })
 export class Role extends Model {
   @Column({

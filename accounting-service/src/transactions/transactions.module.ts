@@ -9,6 +9,7 @@ import { Transaction } from './entities/transaction.entity';
 import { TransactionPeriod } from './entities/transaction.period.entity';
 import { TaskPrice } from './entities/task.price.entity';
 import { Outbox } from 'src/db/models/outbox';
+import { TransactionPeriodsController } from './transaction.periods.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { Outbox } from 'src/db/models/outbox';
       Outbox,
     ]),
   ],
-  controllers: [TransactionsController],
+  controllers: [TransactionsController, TransactionPeriodsController],
   providers: [
     TransactionsService,
     TransactionsService,

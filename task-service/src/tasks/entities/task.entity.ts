@@ -3,7 +3,9 @@ export enum TaskStatus {
   ASSIGNED = 'ASSIGNED',
   COMPLETED = 'COMPLETED',
 }
-@Table
+@Table({
+  version: true
+})
 export class Task extends Model {
   @Column({
     primaryKey: true,

@@ -35,7 +35,7 @@ export class RolesService {
 
         const role = await this.roleModel.create({ name }, transactionHost);
 
-        const event = new RoleCreatedV1Event(role.id, role.name);
+        const event = new RoleCreatedV1Event(role.id, role.name, role.version);
         const payload = await this.schemaRegistry.serialize(
           RoleCreatedV1Event.EVENT_NAME,
           RoleCreatedV1Event.VERSION,
@@ -95,15 +95,14 @@ export class RolesService {
   async update(id: number, name: string): Promise<number | null> {
     try {
       return await this.sequelize.transaction(async (t) => {
-        const updated = await this.roleModel.update(
-          { name },
-          { where: { id }, transaction: t },
-        );
+        let role = await this.roleModel.findOne({ where: { id } });
+        if (!role) return null;
 
-        //nothing is updated, skip event
-        if (updated[0] === 0) return null;
-
-        const event = new RoleUpdatedV1Event(id, name);
+        role.name = name;
+        role = await role.save({ transaction: t });
+        
+        const event = new RoleUpdatedV1Event(id, name, role.version);
+        
         const payload = await this.schemaRegistry.serialize(
           RoleUpdatedV1Event.EVENT_NAME,
           RoleUpdatedV1Event.VERSION,
@@ -118,7 +117,7 @@ export class RolesService {
           { transaction: t },
         );
 
-        return updated[0];
+        return role.id;
       });
     } catch (e) {
       this.logger.error('update role error', e);

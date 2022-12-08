@@ -19,6 +19,9 @@ docker build -q -f Dockerfile.accounting-service -t skwinnik/accounting-service-
 echo 'Building analytics-service'
 docker build -q -f Dockerfile.analytics-service -t skwinnik/analytics-service-node .
 
+echo 'Building view-service'
+docker build -q -f Dockerfile.view-service -t skwinnik/view-service-node .
+
 echo 'Building web-ui'
 docker build -q -f Dockerfile.web-ui -t skwinnik/web-ui-node .
 
@@ -28,6 +31,7 @@ docker push -q skwinnik/auth-service-node
 docker push -q skwinnik/task-service-node
 docker push -q skwinnik/accounting-service-node
 docker push -q skwinnik/analytics-service-node
+docker push -q skwinnik/view-service-node
 docker push -q skwinnik/web-ui-node
 
 cd .helm

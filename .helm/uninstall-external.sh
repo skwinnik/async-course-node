@@ -1,3 +1,3 @@
 #!/bin/sh
 
-helm uninstall postgresql kafka kafka-ui --namespace async-course
+helm uninstall mongodb postgresql kafka kafka-ui --namespace async-course

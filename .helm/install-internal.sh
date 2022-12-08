@@ -5,4 +5,5 @@
 ./install-task-service.sh
 ./install-accounting-service.sh
 ./install-analytics-service.sh
+./install-view-service.sh
 ./install-web-ui.sh

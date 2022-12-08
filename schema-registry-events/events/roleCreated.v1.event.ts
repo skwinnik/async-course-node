@@ -7,6 +7,7 @@ export class RoleCreatedV1Event {
   constructor(
     public readonly id: number,
     public readonly name: string,
+    public readonly version: number,
   ) {}
 }
 
@@ -15,6 +16,7 @@ export const RoleCreatedV1EventSchema: JSONSchemaType<RoleCreatedV1Event> = {
   properties: {
     id: { type: 'number' },
     name: { type: 'string' },
+    version: { type: 'number' },
   },
-  required: ['id', 'name'],
+  required: ['id', 'name', 'version'],
 };

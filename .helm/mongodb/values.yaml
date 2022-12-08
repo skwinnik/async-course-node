@@ -1,0 +1,8 @@
+auth:
+  enabled: true
+  rootUser: root
+  rootPassword: qwerty
+
+persistence:
+  enabled: true
+  storageClass: nfs-client
