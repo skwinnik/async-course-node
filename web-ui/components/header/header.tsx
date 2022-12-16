@@ -2,12 +2,20 @@ import { NextPage } from "next";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header: NextPage = () => {
-  const { status, data } = useSession();
+  const { status: sessionStatus, data: sessionData } = useSession();
   const [menuVisible, setMenuVisible] = useState(false);
+  const [menuItems, setMenuItems] = useState<IMenuItem[] | undefined>(
+    undefined
+  );
   const router = useRouter();
+
+  useEffect(() => {
+    if (!sessionData || !sessionData.user) return;
+    setMenuItems(getMenuItems(sessionData.user.role));
+  }, [sessionData]);
 
   const linkClasses =
     "block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
@@ -44,43 +52,25 @@ const Header: NextPage = () => {
           className={`${menuVisible ? "" : "hidden"} w-full md:block md:w-auto`}
         >
           <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:items-center md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-black md:dark:bg-black dark:border-gray-700">
-            <li className="order-1">
-              <Link
-                href="/"
-                className={` ${
-                  router.pathname === "/" ? linkActiveClasses : linkClasses
-                }`}
-              >
-                Home
-              </Link>
-            </li>
-            <li className="order-1">
-              <Link
-                href="/me/tasks"
-                className={` ${
-                  router.pathname === "/me/tasks"
-                    ? linkActiveClasses
-                    : linkClasses
-                }`}
-              >
-                Tasks
-              </Link>
-            </li>
-            <li className="order-1">
-              <Link
-                href="/me/transactions"
-                className={` ${
-                  router.pathname === "/me/transactions"
-                    ? linkActiveClasses
-                    : linkClasses
-                }`}
-              >
-                Transactions
-              </Link>
-            </li>
+            {menuItems &&
+              menuItems.map((item, i) => (
+                <li key={i} className="order-1">
+                  <Link
+                    href={item.href}
+                    className={` ${
+                      router.pathname === item.href
+                        ? linkActiveClasses
+                        : linkClasses
+                    }`}
+                  >
+                    {item.text}
+                  </Link>
+                </li>
+              ))}
+
             <li className="-order-1 md:order-1">
-              {status === "loading" && "Loading!"}
-              {status === "unauthenticated" && (
+              {sessionStatus === "loading" && "Loading!"}
+              {sessionStatus === "unauthenticated" && (
                 <div className="flex-1 gap-5 pb-5 md:pb-0 items-center justify-between text-center">
                   <div className="flex-auto flex-grow-0 flex-shrink-0">
                     <button
@@ -92,12 +82,14 @@ const Header: NextPage = () => {
                   </div>
                 </div>
               )}
-              {status === "authenticated" &&
-                data &&
-                data.user &&
-                data.user.name && (
+              {sessionStatus === "authenticated" &&
+                sessionData &&
+                sessionData.user &&
+                sessionData.user.name && (
                   <div className="flex gap-5 pb-5 md:pb-0 items-center justify-between">
-                    <div className="flex-auto">Hello, {data.user.name}!</div>
+                    <div className="flex-auto">
+                      Hello, {sessionData.user.name}!
+                    </div>
                     <div className="flex-auto flex-grow-0 flex-shrink-0">
                       <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -116,3 +108,45 @@ const Header: NextPage = () => {
   );
 };
 export default Header;
+
+interface IMenuItem {
+  text: string;
+  href: string;
+}
+
+function getMenuItems(role: string) {
+  switch (role) {
+    case "admin":
+      return adminMenuItems;
+    case "user":
+      return userMenuItems;
+    default:
+      return [];
+  }
+}
+
+const userMenuItems: IMenuItem[] = [
+  {
+    text: "Home",
+    href: "/me",
+  },
+  {
+    text: "Tasks",
+    href: "/me/tasks",
+  },
+  {
+    text: "Transactions",
+    href: "/me/transactions",
+  },
+];
+
+const adminMenuItems: IMenuItem[] = [
+  {
+    text: "Home",
+    href: "/admin",
+  },
+  {
+    text: "Create Task",
+    href: "/admin/tasks/create",
+  }
+];

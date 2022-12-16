@@ -15,6 +15,14 @@ class TaskService {
     });
   }
 
+  async create(name: string): Promise<void> {
+    const res = await this.http.post("/b/tasks", { name });
+    if (res.status !== 201)
+      throw new Error("Error creating task", {
+        cause: res,
+      });
+  }
+
   async complete(taskId: number): Promise<void> {
     const res = await this.http.post("/b/tasks/complete", { id: taskId });
     if (res.status !== 201)
